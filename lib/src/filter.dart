@@ -43,8 +43,10 @@ class TextNumberFilter {
 
   TextNumberFilter prepare(Map<String, dynamic> params) {
     removing = params['removing'] == true;
-    hasDecimalPoint = options.decimalDigits == null || options.decimalDigits! > 0;
-    allowDecimalPoint = options.insertDecimalDigits || !options.insertDecimalPoint;
+    hasDecimalPoint =
+        options.decimalDigits == null || options.decimalDigits! > 0;
+    allowDecimalPoint =
+        options.insertDecimalDigits || !options.insertDecimalPoint;
     decimalWithoutPoint = hasDecimalPoint && !allowDecimalPoint;
     maxIntegerDigits = options.integerDigits;
     maxDecimalDigits = options.decimalDigits;
@@ -139,12 +141,14 @@ class TextNumberFilter {
   bool filterInteger(int value, int index, LookupTextValueEditor state) {
     var allow = false;
     hasNumber = true;
-    if (value != _number_0) foundNumbers = true;
+    if (value != _number_0 || (value == _number_0 && index == 0))
+      foundNumbers = true;
     if (foundNumbers && !limitedInteger) {
       var newIntegerDigits = integerDigits + 1;
       if (maxIntegerDigits == null || newIntegerDigits < maxIntegerDigits!) {
         allow = true;
-      } else if (maxIntegerDigits != null && newIntegerDigits == maxIntegerDigits!) {
+      } else if (maxIntegerDigits != null &&
+          newIntegerDigits == maxIntegerDigits!) {
         allow = filterMaximumInteger(value, state.index, state);
       } else {
         allow = filterOverInteger(value, state.index, state);
@@ -157,11 +161,14 @@ class TextNumberFilter {
   }
 
   bool filterMaximumInteger(int value, int index, LookupTextValueEditor state) {
-    if (options.maxInteger != null && options.maxInteger!.length == maxIntegerDigits) {
+    if (options.maxInteger != null &&
+        options.maxInteger!.length == maxIntegerDigits) {
       var codes = options.maxInteger!.codeUnits;
       for (int i = 0; i < maxIntegerDigits!; i++) {
         var code = codes[i];
-        var char = !allowing && i >= startPosition ? state[state.index + i - startPosition] : state[i];
+        var char = !allowing && i >= startPosition
+            ? state[state.index + i - startPosition]
+            : state[i];
         if (char < code) {
           return true;
         } else if (char > code) {
@@ -204,7 +211,9 @@ class TextNumberFilter {
         allow = true;
       } else if (limitedDecimal == true) {
         allow = false;
-      } else if (limitedNumber && options.maxDecimal != null && options.maxDecimal!.length == maxDecimalDigits) {
+      } else if (limitedNumber &&
+          options.maxDecimal != null &&
+          options.maxDecimal!.length == maxDecimalDigits) {
         allow = filterMaximumDecimal(value, state.index, state);
       } else {
         allow = true;
@@ -231,7 +240,8 @@ class TextNumberFilter {
     }
   }
 
-  bool filterOtherDecimalPoint(int value, int index, LookupTextValueEditor state) {
+  bool filterOtherDecimalPoint(
+      int value, int index, LookupTextValueEditor state) {
     var allow = false;
     if (hasDecimalPoint && allowDecimalPoint && options.overrideDecimalPoint) {
       if (!allowing && startPosition < state.index) {
@@ -299,7 +309,9 @@ class TextNumberFilter {
         decimalDigits = options.decimalDigits!;
         editor.insert(decimalPoint!, decimalSeparator);
       } else {
-        if (!removing || integerDigits > 1 || (integerDigits == 1 && editor[isNegative ? 1 : 0] != _number_0)) {
+        if (!removing ||
+            integerDigits > 1 ||
+            (integerDigits == 1 && editor[isNegative ? 1 : 0] != _number_0)) {
           var missingNumber = options.decimalDigits! - integerDigits;
           var missingInteger = '0$decimalSeparator';
           if (missingNumber > 0) {

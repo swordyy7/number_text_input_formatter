@@ -84,7 +84,8 @@ class NumberTextInputFormatter extends TextInputFormatter {
           if (maxInteger.length <= integerDigits) {
             integerDigits = maxInteger.length;
           } else {
-            maxInteger = maxInteger.substring(maxInteger.length - integerDigits);
+            maxInteger =
+                maxInteger.substring(maxInteger.length - integerDigits);
           }
         }
       } else {
@@ -116,11 +117,10 @@ class NumberTextInputFormatter extends TextInputFormatter {
     TextEditingValue newValue,
   ) {
     if (newValue.text.isEmpty == true) return newValue;
-
     TextValueEditor state = TextValueEditor(newValue);
     TextNumberFilter(this, state)
-        ..prepare({'removing': oldValue.text.length - 1 == newValue.text.length})
-        ..filter();
+      ..prepare({'removing': oldValue.text.length - 1 == newValue.text.length})
+      ..filter();
 
     if (state.isNotEmpty) {
       if (prefix != null) {
@@ -184,7 +184,8 @@ class PercentageTextInputFormatter extends NumberTextInputFormatter {
           suffix: suffix,
           integerDigits: integerDigits,
           decimalDigits: decimalDigits,
-          maxValue: '1${'0' * (integerDigits - 1)}${decimalDigits > 0 ? '.${'0' * decimalDigits}' : ''}',
+          maxValue:
+              '1${'0' * (integerDigits - 1)}${decimalDigits > 0 ? '.${'0' * decimalDigits}' : ''}',
           allowNegative: allowNegative,
           decimalSeparator: decimalSeparator,
           groupDigits: groupDigits,
